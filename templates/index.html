@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}EcoWise - AI Waste Reduction{% endblock %}
+{% block content %}
+<main>
+  <section class="hero-section">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+          <span class="badge rounded-pill text-bg-success-subtle text-success mb-3">AI-powered sustainability coach</span>
+          <h1 class="display-3 fw-black lh-1">Predict waste. Lower carbon. Build better habits.</h1>
+          <p class="lead text-muted mt-4">EcoWise predicts your waste category, estimates CO₂ emissions, calculates category probabilities, and gives personalized actions to reduce pollution before it happens.</p>
+          <div class="d-flex flex-wrap gap-3 mt-4">
+            <a href="{{ url_for('signup') }}" class="btn btn-success btn-lg">Start free</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-success btn-lg">Open dashboard</a>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="eco-card p-4 animate-float">
+            <div class="row g-3">
+              <div class="col-6"><div class="metric-box"><span>Prediction</span><strong>Low Waste</strong></div></div>
+              <div class="col-6"><div class="metric-box"><span>Confidence</span><strong>87%</strong></div></div>
+              <div class="col-6"><div class="metric-box"><span>CO₂</span><strong>14kg</strong></div></div>
+              <div class="col-6"><div class="metric-box"><span>Eco Score</span><strong>91</strong></div></div>
+            </div>
+            <div class="progress mt-4" style="height: 14px;"><div class="progress-bar bg-success" style="width: 78%"></div></div>
+            <p class="small text-muted mt-3 mb-0">Future risk decreases when reusable products and recycling increase.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5" id="features">
+    <div class="container">
+      <div class="row g-4">
+        {% for icon, title, text in [
+          ("bi-cpu", "AI Waste Prediction", "Random Forest predicts Low, Medium, or High Waste behavior."),
+          ("bi-percent", "Probability Analytics", "See the chances of each waste category with confidence bars."),
+          ("bi-cloud", "Carbon Footprint", "Understand the formula and which habits raise emissions."),
+          ("bi-lightbulb", "Smart Recommendations", "Receive practical habit changes based on your risk factors.")
+        ] %}
+        <div class="col-md-6 col-xl-3">
+          <div class="eco-card h-100 p-4">
+            <i class="bi {{ icon }} feature-icon"></i>
+            <h3 class="h5 mt-4">{{ title }}</h3>
+            <p class="text-muted mb-0">{{ text }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5 bg-soft">
+    <div class="container">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-6">
+          <h2 class="fw-black">How the AI works</h2>
+          <p class="text-muted">EcoWise uses synthetic training data with plastic usage, delivery frequency, shopping frequency, recycling habits, and reusable item usage. A Random Forest model learns behavior patterns and returns category probabilities.</p>
+          <ul class="list-unstyled">
+            <li><i class="bi bi-check-circle text-success me-2"></i> Higher plastic, delivery, and shopping increase risk.</li>
+            <li><i class="bi bi-check-circle text-success me-2"></i> Recycling and reusable items reduce emissions.</li>
+            <li><i class="bi bi-check-circle text-success me-2"></i> Probability meters explain uncertainty clearly.</li>
+          </ul>
+        </div>
+        <div class="col-lg-6">
+          <div class="eco-card p-4">
+            <h3 class="h5">Carbon Footprint Formula</h3>
+            <pre class="formula-box mt-3">Carbon Footprint =
+(Plastic Usage x 2.5)
++ (Food Delivery x 1.8)
++ (Shopping x 1.5)
+- (Recycling x 2.0)
+- (Reusable Items x 1.7)</pre>
+            <p class="text-muted mb-0">Plastic and packaging increase pollution, while recycling and reusable products reduce landfill waste and carbon footprint.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4"><div class="eco-card p-4 h-100"><h3>Sustainability Awareness</h3><p class="text-muted">Learn why daily lifestyle choices shape landfill load, pollution, and emissions.</p></div></div>
+        <div class="col-lg-4"><div class="eco-card p-4 h-100"><h3>Future Waste Prediction</h3><p class="text-muted">Forecast if your current behavior may increase High Waste probability next month.</p></div></div>
+        <div class="col-lg-4"><div class="eco-card p-4 h-100"><h3>Environmental Education</h3><p class="text-muted">Understand the contribution of plastic, food packaging, shopping, recycling, and reuse.</p></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

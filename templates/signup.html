@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Signup - EcoWise{% endblock %}
+{% block content %}
+<main class="auth-page">
+  <div class="container">
+    <div class="auth-card eco-card mx-auto p-4 p-md-5">
+      <h1 class="h2 fw-black">Create account</h1>
+      <p class="text-muted">Password hashing and validation are handled by Flask/Werkzeug.</p>
+      <form method="post">
+        <label class="form-label">Username</label>
+        <input class="form-control mb-3" name="username" required>
+        <label class="form-label">Email</label>
+        <input class="form-control mb-3" type="email" name="email" required>
+        <label class="form-label">Password</label>
+        <input class="form-control mb-4" type="password" name="password" minlength="6" required>
+        <button class="btn btn-success w-100" type="submit">Sign up</button>
+      </form>
+      <a class="small d-inline-block mt-3" href="{{ url_for('login') }}">Already have an account?</a>
+    </div>
+  </div>
+</main>
+{% endblock %}

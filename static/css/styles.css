@@ -1,0 +1,166 @@
+:root {
+  --eco-green: #16a34a;
+  --eco-dark: #071512;
+  --eco-soft: #f0fdf4;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(135deg, #f7fff9, #ecfdf5);
+  color: var(--eco-dark);
+}
+
+body.dark-mode {
+  background: linear-gradient(135deg, #071512, #0f2a20);
+  color: #f7fff9;
+}
+
+.fw-black {
+  font-weight: 900;
+}
+
+.eco-nav {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(20, 83, 45, 0.12);
+}
+
+.dark-mode .eco-nav {
+  background: rgba(7, 21, 18, 0.88);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.brand-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #14532d;
+  color: #dcfce7;
+}
+
+.hero-section {
+  min-height: 82vh;
+  display: grid;
+  align-items: center;
+  padding: 70px 0;
+}
+
+.eco-card {
+  border: 1px solid rgba(20, 83, 45, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 22px 70px rgba(7, 21, 18, 0.08);
+}
+
+.dark-mode .eco-card,
+.dark-mode .metric-box {
+  background: rgba(15, 42, 32, 0.92);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.metric-box {
+  border-radius: 8px;
+  background: #f0fdf4;
+  padding: 18px;
+}
+
+.metric-box span,
+.metric-card span {
+  display: block;
+  color: #5b7268;
+  font-size: 0.85rem;
+}
+
+.dark-mode .metric-box span,
+.dark-mode .metric-card span,
+.dark-mode .text-muted {
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
+.metric-box strong,
+.metric-card strong {
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  line-height: 1.1;
+}
+
+.feature-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #14532d;
+  font-size: 1.4rem;
+}
+
+.bg-soft {
+  background: rgba(220, 252, 231, 0.55);
+}
+
+.dark-mode .bg-soft {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.formula-box {
+  white-space: pre-wrap;
+  border-radius: 8px;
+  background: #052e16;
+  color: #dcfce7;
+  padding: 16px;
+  font-size: 0.9rem;
+}
+
+.auth-page {
+  min-height: calc(100vh - 78px);
+  display: grid;
+  align-items: center;
+  padding: 48px 0;
+}
+
+.auth-card {
+  max-width: 480px;
+}
+
+.probability-progress {
+  height: 14px;
+}
+
+.recommendation-card {
+  border-radius: 8px;
+  background: #f0fdf4;
+  border: 1px solid rgba(22, 163, 74, 0.18);
+  padding: 16px;
+  height: 100%;
+}
+
+.dark-mode .recommendation-card {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.risk-pill {
+  border-radius: 8px;
+  background: rgba(22, 163, 74, 0.1);
+  padding: 14px;
+  height: 100%;
+}
+
+.dark-mode .risk-pill {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.animate-float {
+  animation: floatCard 4s ease-in-out infinite;
+}
+
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}

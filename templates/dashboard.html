@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - EcoWise{% endblock %}
+{% block content %}
+<main class="py-4">
+  <div class="container">
+    <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-end mb-4">
+      <div>
+        <h1 class="fw-black mb-1">Waste Intelligence Dashboard</h1>
+        <p class="text-muted mb-0">Hello {{ user.username }}. Enter habits from 0 to 10 and let EcoWise predict your environmental impact.</p>
+      </div>
+      <span class="badge rounded-pill text-bg-success-subtle text-success p-3">Session authentication active</span>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="eco-card p-4">
+          <h2 class="h4 fw-black">User Habit Input</h2>
+          <form id="habitForm" class="mt-3">
+            {% for field, label, value in [
+              ("plastic_usage", "Plastic usage", 5),
+              ("food_delivery_frequency", "Food delivery frequency", 3),
+              ("shopping_frequency", "Shopping frequency", 4),
+              ("recycling_habits", "Recycling habits", 6),
+              ("reusable_item_usage", "Reusable item usage", 7)
+            ] %}
+            <label class="form-label small fw-bold">{{ label }}</label>
+            <input class="form-range" type="range" min="0" max="10" value="{{ value }}" id="{{ field }}" name="{{ field }}" oninput="document.getElementById('{{ field }}Value').textContent=this.value">
+            <div class="d-flex justify-content-between mb-3 small text-muted"><span>0</span><b id="{{ field }}Value">{{ value }}</b><span>10</span></div>
+            {% endfor %}
+            <button class="btn btn-success w-100" type="submit"><i class="bi bi-stars me-2"></i>Predict Waste Category</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="row g-3 mb-4">
+          <div class="col-md-6 col-xl-3"><div class="eco-card metric-card p-3"><span>Waste Prediction</span><strong id="wasteLevel">-</strong></div></div>
+          <div class="col-md-6 col-xl-3"><div class="eco-card metric-card p-3"><span>Waste Score</span><strong id="wasteScore">-</strong></div></div>
+          <div class="col-md-6 col-xl-3"><div class="eco-card metric-card p-3"><span>CO₂ kg/month</span><strong id="carbonFootprint">-</strong></div></div>
+          <div class="col-md-6 col-xl-3"><div class="eco-card metric-card p-3"><span>Sustainability</span><strong id="sustainabilityScore">-</strong></div></div>
+        </div>
+
+        <div class="eco-card p-4 mb-4">
+          <div class="d-flex justify-content-between flex-wrap gap-2">
+            <h2 class="h4 fw-black">Waste Probability Meter</h2>
+            <span class="badge text-bg-success" id="confidenceBadge">AI Confidence: -</span>
+          </div>
+          {% for key, label, color in [
+            ("low", "Low Waste behavior", "bg-success"),
+            ("medium", "Medium Waste behavior", "bg-warning"),
+            ("high", "High Waste behavior", "bg-danger")
+          ] %}
+          <div class="mt-3">
+            <div class="d-flex justify-content-between small fw-bold"><span>{{ label }}</span><span id="prob{{ key|capitalize }}">0%</span></div>
+            <div class="progress probability-progress"><div id="bar{{ key|capitalize }}" class="progress-bar {{ color }}" style="width:0%"></div></div>
+          </div>
+          {% endfor %}
+          <p class="text-muted small mt-3 mb-0" id="futureRisk">Future risk estimation will appear here.</p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-xl-6"><div class="eco-card p-4 h-100"><h3 class="h5">Waste Composition Breakdown</h3><canvas id="pieChart"></canvas><div id="pieLegend" class="small mt-3"></div></div></div>
+          <div class="col-xl-6"><div class="eco-card p-4 h-100"><h3 class="h5">Weekly Waste + Carbon Trends</h3><canvas id="barChart"></canvas></div></div>
+          <div class="col-12"><div class="eco-card p-4"><h3 class="h5">Eco Improvement Line Graph</h3><canvas id="lineChart"></canvas></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+      <div class="col-lg-6">
+        <div class="eco-card p-4 h-100">
+          <h2 class="h4 fw-black">Smart AI Recommendations</h2>
+          <div id="recommendations" class="row g-3 mt-1"></div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="eco-card p-4 h-100">
+          <h2 class="h4 fw-black">Carbon Footprint Explanation</h2>
+          <pre class="formula-box">Carbon Footprint Score =
+(Plastic Usage x 2.5)
++ (Food Delivery Frequency x 1.8)
++ (Shopping Frequency x 1.5)
+- (Recycling Habits x 2.0)
+- (Reusable Item Usage x 1.7)</pre>
+          <ul class="small text-muted">
+            <li>Plastic increases pollution because it adds packaging and landfill load.</li>
+            <li>Food delivery increases packaging waste and transport emissions.</li>
+            <li>Shopping frequency increases product packaging and disposal risk.</li>
+            <li>Recycling lowers emissions by recovering materials.</li>
+            <li>Reusable products reduce repeated single-use waste.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="eco-card p-4">
+          <h2 class="h4 fw-black">Risk Analysis</h2>
+          <div id="riskFactors" class="row g-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Admin - EcoWise{% endblock %}
+{% block content %}
+<main class="py-4">
+  <div class="container">
+    <h1 class="fw-black">Admin Dashboard</h1>
+    <p class="text-muted">System-wide sustainability analytics overview.</p>
+    <div class="row g-4">
+      <div class="col-md-4"><div class="eco-card metric-card p-4"><span>Total Registered Users</span><strong>{{ total_users }}</strong></div></div>
+      <div class="col-md-4"><div class="eco-card metric-card p-4"><span>Total Predictions</span><strong>{{ total_predictions }}</strong></div></div>
+      <div class="col-md-4"><div class="eco-card metric-card p-4"><span>Average Carbon Footprint</span><strong>{{ avg_carbon }}</strong></div></div>
+    </div>
+    <div class="row g-4 mt-1">
+      <div class="col-lg-6">
+        <div class="eco-card p-4">
+          <h2 class="h5">Waste Distribution Statistics</h2>
+          <canvas id="adminDistribution"></canvas>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="eco-card p-4">
+          <h2 class="h5">High Waste Probability Trends</h2>
+          <canvas id="adminTrend"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+  const distribution = {{ distribution|tojson }};
+  const trends = {{ high_trends|tojson }};
+  new Chart(document.getElementById("adminDistribution"), {
+    type: "pie",
+    data: {
+      labels: distribution.map(item => item.waste_level),
+      datasets: [{ data: distribution.map(item => item.count), backgroundColor: ["#16a34a", "#f59e0b", "#dc2626"] }]
+    }
+  });
+  new Chart(document.getElementById("adminTrend"), {
+    type: "line",
+    data: {
+      labels: trends.map((item, index) => `#${index + 1}`).reverse(),
+      datasets: [{ label: "High Waste Probability", data: trends.map(item => item.probability_high).reverse(), borderColor: "#dc2626", tension: .35 }]
+    }
+  });
+</script>
+{% endblock %}

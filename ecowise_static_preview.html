@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EcoWise - AI Waste Reduction</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root{--leaf:#16a34a;--mint:#dcfce7;--sky:#38bdf8;--sun:#facc15;--rose:#fb7185;--ink:#071512}
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(135deg,#f7fff9,#e0f2fe 46%,#dcfce7);color:var(--ink);font-family:Inter,system-ui,Segoe UI,sans-serif}
+    body.dark{background:linear-gradient(135deg,#071512,#10251f 55%,#082f49);color:#f7fff9}
+    .eco-nav{background:rgba(255,255,255,.78);backdrop-filter:blur(18px);border-bottom:1px solid rgba(20,83,45,.12)}
+    body.dark .eco-nav{background:rgba(7,21,18,.84);border-color:rgba(255,255,255,.12)}
+    .brand{font-weight:950;letter-spacing:.2px}.brand-icon{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#14532d,#16a34a);color:#dcfce7;box-shadow:0 0 36px rgba(22,163,74,.32)}
+    .hero{min-height:76vh;display:grid;align-items:center;padding:48px 0}.fw-black{font-weight:950}
+    .eco-card{border:1px solid rgba(20,83,45,.13);border-radius:14px;background:rgba(255,255,255,.88);box-shadow:0 24px 80px rgba(7,21,18,.1);backdrop-filter:blur(18px)}
+    body.dark .eco-card{background:rgba(15,42,32,.9);border-color:rgba(255,255,255,.12)}
+    .planet{min-height:330px;position:relative;overflow:hidden;background:radial-gradient(circle at 40% 35%,#bbf7d0,#22c55e 46%,#0f766e 72%);border-radius:22px}
+    .planet:before{content:"";position:absolute;inset:38px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.7),transparent 22%),radial-gradient(circle at 65% 55%,rgba(14,165,233,.55),transparent 30%)}
+    .float-emoji{position:absolute;font-size:38px;animation:float 4s ease-in-out infinite}.e1{left:10%;top:12%}.e2{right:13%;top:18%;animation-delay:.5s}.e3{left:18%;bottom:15%;animation-delay:1s}.e4{right:18%;bottom:12%;animation-delay:1.5s}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-14px) rotate(5deg)}}
+    .login-wrap{min-height:100vh;display:grid;align-items:center;padding:40px 0}.avatar-choice input{display:none}.avatar-choice span{display:grid;place-items:center;width:58px;height:58px;border-radius:18px;background:#f0fdf4;border:2px solid transparent;font-size:30px;cursor:pointer;transition:.2s}.avatar-choice input:checked+span{border-color:var(--leaf);transform:translateY(-3px);box-shadow:0 12px 30px rgba(22,163,74,.22)}
+    body.dark .avatar-choice span{background:rgba(255,255,255,.1)}
+    .metric strong{display:block;font-size:clamp(1.6rem,3vw,2.35rem);line-height:1.05}.metric span{color:#5d746b}.dark .metric span,.dark .text-muted{color:rgba(255,255,255,.68)!important}
+    .input-tile{border-radius:14px;border:1px solid rgba(20,83,45,.12);background:#f8fff9;padding:16px;height:100%}.dark .input-tile{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12)}
+    .range-bubble{display:inline-grid;place-items:center;min-width:42px;height:32px;border-radius:999px;background:var(--mint);color:#14532d;font-weight:900}
+    .yn input{display:none}.yn label{border:1px solid rgba(20,83,45,.14);border-radius:999px;padding:9px 14px;cursor:pointer;background:white;font-weight:800}.dark .yn label{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12)}.yn input:checked+label{background:var(--leaf);color:white;border-color:var(--leaf)}
+    .tip{border-radius:12px;background:linear-gradient(135deg,#ecfdf5,#f0f9ff);padding:16px;height:100%;border:1px solid rgba(22,163,74,.12)}.dark .tip{background:rgba(255,255,255,.08)}
+    .result-box{border-left:6px solid var(--leaf);background:#f0fdf4}.dark .result-box{background:rgba(34,197,94,.12)}
+    .color-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px}.confetti{position:fixed;pointer-events:none;font-size:26px;animation:pop 900ms ease forwards}@keyframes pop{0%{opacity:1;transform:translateY(0) scale(.8)}100%{opacity:0;transform:translateY(-80px) scale(1.4)}}
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg eco-nav sticky-top">
+    <div class="container">
+      <span class="navbar-brand brand d-flex align-items-center gap-2"><span class="brand-icon">🌍</span> EcoWise AI</span>
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge text-bg-success d-none d-sm-inline" id="navUser">Guest</span>
+        <button class="btn btn-outline-danger btn-sm d-none" id="logoutBtn" onclick="logoutUser()">Logout</button>
+        <button class="btn btn-outline-success btn-sm" onclick="document.body.classList.toggle('dark')">🌙 Theme</button>
+      </div>
+    </div>
+  </nav>
+
+  <main id="loginScreen" class="login-wrap">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-6">
+          <div class="planet shadow-lg">
+            <span class="float-emoji e1">🌱</span><span class="float-emoji e2">♻️</span><span class="float-emoji e3">☀️</span><span class="float-emoji e4">💧</span>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="eco-card p-4 p-md-5">
+            <span class="badge rounded-pill text-bg-success-subtle text-success mb-3">Login Portal</span>
+            <h1 class="display-5 fw-black">Welcome to EcoWise 👋</h1>
+            <p class="text-muted">Tell us who you are so the AI can make your waste report feel personal.</p>
+            <form id="loginForm">
+              <label class="form-label fw-bold">Your name</label>
+              <input class="form-control form-control-lg mb-3" id="userName" placeholder="Example: Hitha" required>
+              <label class="form-label fw-bold">Your age</label>
+              <input class="form-control form-control-lg mb-3" id="userAge" type="number" min="5" max="100" placeholder="Example: 19" required>
+              <label class="form-label fw-bold">Choose your eco avatar</label>
+              <div class="d-flex gap-3 mb-4">
+                <label class="avatar-choice"><input type="radio" name="avatar" value="🌿" checked><span>🌿</span></label>
+                <label class="avatar-choice"><input type="radio" name="avatar" value="🌻"><span>🌻</span></label>
+                <label class="avatar-choice"><input type="radio" name="avatar" value="🐢"><span>🐢</span></label>
+                <label class="avatar-choice"><input type="radio" name="avatar" value="🌎"><span>🌎</span></label>
+              </div>
+              <button class="btn btn-success btn-lg w-100" type="submit">Enter EcoWise Dashboard ✨</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <main id="appScreen" class="d-none">
+    <section class="hero">
+      <div class="container">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-7">
+            <span class="badge text-bg-success rounded-pill mb-3" id="welcomeBadge">Welcome</span>
+            <h1 class="display-4 fw-black">AI Waste Reduction Recommendation System</h1>
+            <p class="lead text-muted">Answer colorful lifestyle questions. EcoWise predicts your waste category, writes a result description, and gives suggestions based only on your data.</p>
+            <a class="btn btn-success btn-lg" href="#dashboard">Start Prediction 🚀</a>
+          </div>
+          <div class="col-lg-5">
+            <div class="eco-card p-4">
+              <div class="row g-3">
+                <div class="col-6 metric"><span>Category</span><strong id="heroLevel">Not yet</strong></div>
+                <div class="col-6 metric"><span>AI Confidence</span><strong id="heroConfidence">--%</strong></div>
+                <div class="col-6 metric"><span>CO₂ kg/mo</span><strong id="heroCarbon">--</strong></div>
+                <div class="col-6 metric"><span>Eco Score</span><strong id="heroEco">--</strong></div>
+              </div>
+              <div class="progress mt-4" style="height:14px"><div class="progress-bar bg-success" id="heroBar" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-5" id="dashboard">
+      <div class="container">
+        <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-end mb-4">
+          <div><h2 class="fw-black">Lifestyle Input Lab 🧪</h2><p class="text-muted mb-0">Use sliders, emoji choices, and yes/no answers. Numbers are captured in a fun way.</p></div>
+          <button class="btn btn-outline-success" onclick="resetForm()">Reset Inputs</button>
+        </div>
+        <div class="row g-4">
+          <div class="col-lg-4">
+            <div class="eco-card p-4">
+              <form id="habitForm">
+                <div id="sliderArea"></div>
+                <hr>
+                <h3 class="h5 fw-black">Quick Yes / No 🌈</h3>
+                <div id="yesNoArea" class="d-grid gap-3"></div>
+                <button class="btn btn-success w-100 mt-4" type="submit">Predict Waste Category 🤖</button>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="row g-3 mb-4">
+              <div class="col-md-3"><div class="eco-card p-3 metric"><span>Waste</span><strong id="level">--</strong></div></div>
+              <div class="col-md-3"><div class="eco-card p-3 metric"><span>Waste Score</span><strong id="score">--</strong></div></div>
+              <div class="col-md-3"><div class="eco-card p-3 metric"><span>Carbon</span><strong id="carbon">--</strong></div></div>
+              <div class="col-md-3"><div class="eco-card p-3 metric"><span>Sustainability</span><strong id="eco">--</strong></div></div>
+            </div>
+            <div class="eco-card p-4 mb-4 result-box">
+              <h3 class="h4 fw-black">AI Result Description 🧠</h3>
+              <p class="lead mb-0" id="description">Submit your lifestyle data to get a personalized paragraph.</p>
+            </div>
+            <div class="eco-card p-4 mb-4">
+              <div class="d-flex justify-content-between flex-wrap gap-2">
+                <h3 class="h5 fw-black">Waste Probability Meter</h3>
+                <span class="badge text-bg-success" id="confidence">AI Confidence: --</span>
+              </div>
+              <div class="mt-3"><div class="d-flex justify-content-between"><b>Low Waste</b><b id="pLow">0%</b></div><div class="progress"><div class="progress-bar bg-success" id="bLow"></div></div></div>
+              <div class="mt-3"><div class="d-flex justify-content-between"><b>Medium Waste</b><b id="pMedium">0%</b></div><div class="progress"><div class="progress-bar bg-warning" id="bMedium"></div></div></div>
+              <div class="mt-3"><div class="d-flex justify-content-between"><b>High Waste</b><b id="pHigh">0%</b></div><div class="progress"><div class="progress-bar bg-danger" id="bHigh"></div></div></div>
+              <p class="text-muted small mt-3 mb-0" id="riskText">Risk explanation will appear after prediction.</p>
+            </div>
+            <div class="row g-4">
+              <div class="col-xl-6"><div class="eco-card p-4"><h3 class="h5">Waste Composition Breakdown</h3><canvas id="pie"></canvas><div class="small mt-3" id="legend"></div></div></div>
+              <div class="col-xl-6"><div class="eco-card p-4"><h3 class="h5">Weekly Analytics</h3><canvas id="bar"></canvas></div></div>
+              <div class="col-12"><div class="eco-card p-4"><h3 class="h5">Eco Improvement Trend</h3><canvas id="line"></canvas></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-4 mt-1">
+          <div class="col-lg-7"><div class="eco-card p-4"><h3 class="fw-black">AI Enabled Suggestions ✨</h3><div class="row g-3" id="tips"></div></div></div>
+          <div class="col-lg-5"><div class="eco-card p-4"><h3 class="fw-black">Your Pollution Drivers 🔍</h3><div id="drivers" class="d-grid gap-3"></div></div></div>
+        </div>
+        <div class="row g-4 mt-1">
+          <div class="col-lg-6">
+            <div class="eco-card p-4 h-100">
+              <h3 class="fw-black">Calculation Breakdown 🧮</h3>
+              <div id="calculationBox" class="d-grid gap-3">
+                <div class="tip">Submit the form to see every formula and the exact values used.</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="eco-card p-4 h-100">
+              <h3 class="fw-black">Formula Descriptions 📘</h3>
+              <div class="tip mb-3"><b>Carbon Formula:</b><br>Carbon = plastic x 2.5 + delivery x 1.8 + shopping x 1.5 + food waste x 1.2 - recycling x 2 - reusable x 1.7 - eco bonus + single-use penalty.</div>
+              <div class="tip mb-3"><b>Waste Score Formula:</b><br>Waste Score = carbon x 3.1 + plastic x 2 + delivery x 1.4 + food waste x 1.8 + penalties - eco bonuses.</div>
+              <div class="tip"><b>Probability Formula:</b><br>High Waste chance grows with the waste score and risky yes/no answers. Low Waste chance grows when composting, segregation, recycling, and reusable habits improve.</div>
+            </div>
+          </div>
+        </div>
+        <div class="eco-card p-4 mt-4">
+          <h3 class="fw-black">Conclusion Summary 🌍</h3>
+          <p class="lead mb-3" id="conclusionText">Your final sustainability summary will appear here after prediction.</p>
+          <div class="row g-3">
+            <div class="col-md-4"><div class="tip"><b id="emojiRating">🙂 Waiting</b><p class="mb-0 mt-2" id="emojiFeedback">Complete the quiz to receive emoji feedback.</p></div></div>
+            <div class="col-md-4"><div class="tip"><b>Next Best Action ✅</b><p class="mb-0 mt-2" id="nextAction">Prediction needed.</p></div></div>
+            <div class="col-md-4"><div class="tip"><b>Eco Mood 💚</b><p class="mb-0 mt-2" id="ecoMood">Let’s find your eco profile.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script>
+    const sliders=[
+      ["plastic","🥤 Plastic bottles / packets per week",5,"Low","High"],
+      ["delivery","🍔 Food deliveries per week",3,"Rare","Often"],
+      ["shopping","📦 Online shopping orders per month",4,"Few","Many"],
+      ["recycling","♻️ Recycling effort",6,"Never","Always"],
+      ["reusable","🌿 Reusable item usage",7,"Low","High"],
+      ["foodWaste","🍽️ Food wasted per week",4,"Little","A lot"],
+      ["electricity","💡 Extra electricity usage",5,"Low","High"],
+      ["publicTransport","🚌 Public transport / walking usage",5,"Rare","Often"],
+      ["packagedSnacks","🍿 Packaged snacks per week",4,"Few","Many"]
+    ];
+    const yesNo=[
+      ["clothBag","Do you carry a cloth bag while shopping?","🛍️"],
+      ["segregate","Do you separate dry and wet waste?","🗂️"],
+      ["refill","Do you buy refill packs when possible?","🧴"],
+      ["compost","Do you compost food waste?","🍂"],
+      ["singleUse","Do you use single-use cups/plates often?","🥤"],
+      ["repair","Do you repair items before replacing them?","🛠️"],
+      ["localFood","Do you choose local/seasonal food?","🥕"],
+      ["donate","Do you donate clothes or old usable items?","👕"],
+      ["eBill","Do you prefer digital bills instead of paper bills?","📱"]
+    ];
+    let pie,bar,line,user={name:"Guest",age:"--",avatar:"🌿"};
+
+    function initInputs(){
+      document.getElementById("sliderArea").innerHTML=sliders.map(([id,label,value,left,right])=>`
+        <div class="input-tile mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-2"><label class="fw-bold">${label}</label><span class="range-bubble" id="${id}Value">${value}</span></div>
+          <input class="form-range" id="${id}" min="0" max="10" value="${value}" type="range" oninput="${id}Value.textContent=this.value">
+          <div class="d-flex justify-content-between small text-muted"><span>${left}</span><span>${right}</span></div>
+        </div>`).join("");
+      document.getElementById("yesNoArea").innerHTML=yesNo.map(([id,q,emoji])=>`
+        <div class="input-tile">
+          <div class="fw-bold mb-2">${emoji} ${q}</div>
+          <div class="yn d-flex gap-2">
+            <input id="${id}Yes" name="${id}" type="radio" value="yes"><label for="${id}Yes">Yes ✅</label>
+            <input id="${id}No" name="${id}" type="radio" value="no" checked><label for="${id}No">No ❌</label>
+          </div>
+        </div>`).join("");
+    }
+
+    document.getElementById("loginForm").addEventListener("submit",e=>{
+      e.preventDefault();
+      user.name=document.getElementById("userName").value.trim();
+      user.age=Number(document.getElementById("userAge").value);
+      user.avatar=document.querySelector("input[name='avatar']:checked").value;
+      document.getElementById("loginScreen").classList.add("d-none");
+      document.getElementById("appScreen").classList.remove("d-none");
+      document.getElementById("navUser").textContent=`${user.avatar} ${user.name}`;
+      document.getElementById("logoutBtn").classList.remove("d-none");
+      document.getElementById("welcomeBadge").textContent=`${user.avatar} Welcome, ${user.name} • Age ${user.age}`;
+      window.location.hash="#dashboard";
+      confetti();
+    });
+
+    document.getElementById("habitForm").addEventListener("submit",e=>{e.preventDefault();predict();confetti();});
+    initInputs();
+
+    function val(id){return Number(document.getElementById(id).value)}
+    function yes(id){return document.querySelector(`input[name='${id}']:checked`).value==="yes"}
+    function setP(name,value){document.getElementById("p"+name).textContent=value+"%";document.getElementById("b"+name).style.width=value+"%"}
+    function probabilities(score){let high=Math.max(4,Math.min(92,score+(yes("singleUse")?8:0)-(yes("clothBag")?5:0)));let low=Math.max(4,100-score*1.15+(yes("compost")?8:0)+(yes("segregate")?5:0));let medium=Math.max(4,100-high-low);let total=low+medium+high;return [low,medium,high].map(v=>Math.round(v/total*100))}
+
+    function predict(){
+      const data={plastic:val("plastic"),delivery:val("delivery"),shopping:val("shopping"),recycling:val("recycling"),reusable:val("reusable"),foodWaste:val("foodWaste"),electricity:val("electricity"),publicTransport:val("publicTransport"),packagedSnacks:val("packagedSnacks"),clothBag:yes("clothBag"),segregate:yes("segregate"),refill:yes("refill"),compost:yes("compost"),singleUse:yes("singleUse"),repair:yes("repair"),localFood:yes("localFood"),donate:yes("donate"),eBill:yes("eBill")};
+      const bonus=(data.clothBag?6:0)+(data.segregate?7:0)+(data.refill?6:0)+(data.compost?7:0)+(data.repair?5:0)+(data.localFood?4:0)+(data.donate?5:0)+(data.eBill?3:0)+(data.publicTransport*.8);
+      const penalty=(data.singleUse?10:0)+(data.electricity*1.1)+(data.packagedSnacks*1.2);
+      const carbonRaw=data.plastic*2.5+data.delivery*1.8+data.shopping*1.5+data.foodWaste*1.2+data.electricity*1.1+data.packagedSnacks*1.2-data.recycling*2-data.reusable*1.7-data.publicTransport*.8-bonus*.35+penalty*.45;
+      const carbon=Math.max(0,+carbonRaw.toFixed(1));
+      const scoreRaw=carbon*3.1+data.plastic*2+data.delivery*1.4+data.foodWaste*1.8+data.packagedSnacks*1.6+penalty-bonus;
+      const score=Math.max(0,Math.min(100,Math.round(scoreRaw)));
+      const level=score>=66?"High Waste":score>=36?"Medium Waste":"Low Waste";
+      const eco=Math.max(0,Math.min(100,Math.round(100-score+data.recycling+data.reusable+bonus/2)));
+      const p=probabilities(score),conf=Math.max(...p);
+      updateMetrics(level,score,carbon,eco,p,conf);
+      describe(level,score,carbon,eco,p,data);
+      suggestions(level,carbon,p[2],data);
+      drivers(data);
+      charts(data,score,carbon,eco);
+      calculations(data,bonus,penalty,carbonRaw,carbon,scoreRaw,score,eco,p,conf,level);
+      conclusion(level,score,carbon,eco,p,data);
+    }
+
+    function updateMetrics(level,score,carbon,eco,p,conf){
+      ["level","heroLevel"].forEach(id=>document.getElementById(id).textContent=level);
+      document.getElementById("score").textContent=score; document.getElementById("carbon").textContent=carbon; document.getElementById("eco").textContent=eco;
+      document.getElementById("heroCarbon").textContent=carbon; document.getElementById("heroEco").textContent=eco; document.getElementById("heroConfidence").textContent=conf+"%"; document.getElementById("heroBar").style.width=conf+"%";
+      setP("Low",p[0]);setP("Medium",p[1]);setP("High",p[2]);document.getElementById("confidence").textContent=`AI Confidence: ${conf}%`;
+    }
+
+    function describe(level,score,carbon,eco,p,d){
+      const tone=level==="High Waste"?"needs urgent attention":"Medium Waste"===level?"has room for improvement":"is currently eco-friendly";
+      document.getElementById("description").textContent=`${user.avatar} ${user.name}, your EcoWise AI result is ${level}. Your lifestyle pattern ${tone}. The model estimated a waste score of ${score}/100, carbon footprint of ${carbon} kg CO₂ per month, and sustainability score of ${eco}/100. Your High Waste probability is ${p[2]}%, mainly influenced by plastic usage (${d.plastic}/10), food delivery (${d.delivery}/10), shopping frequency (${d.shopping}/10), food waste (${d.foodWaste}/10), extra electricity (${d.electricity}/10), and packaged snacks (${d.packagedSnacks}/10). Your recycling (${d.recycling}/10), reusable item usage (${d.reusable}/10), public transport (${d.publicTransport}/10), and yes/no habits were used to reduce or increase the risk.`;
+      document.getElementById("riskText").textContent=p[2]>45?`If plastic, single-use items, and delivery habits continue, High Waste probability may rise by about ${Math.round(d.plastic*1.3+d.delivery)}% next month.`:"Future risk looks manageable if you keep improving recycling, reuse, and low-packaging choices.";
+    }
+
+    function suggestions(level,carbon,high,d){
+      const tips=[];
+      if(d.plastic>=4)tips.push(["🥤 Plastic","Reduce plastic bottle and packet usage. Carry a reusable bottle daily."]);
+      if(d.delivery>=4)tips.push(["🍔 Delivery","Reduce food delivery frequency or select restaurants with low-packaging options."]);
+      if(d.shopping>=4)tips.push(["📦 Shopping","Combine orders, avoid over-packaged products, and buy refill packs."]);
+      if(d.foodWaste>=4)tips.push(["🍽️ Food Waste","Plan meals, store leftovers, and compost vegetable scraps."]);
+      if(d.electricity>=5)tips.push(["💡 Energy","Switch off unused lights, use efficient appliances, and reduce standby power."]);
+      if(d.packagedSnacks>=4)tips.push(["🍿 Snacks","Choose loose snacks, bulk packs, or homemade snacks to reduce wrappers."]);
+      if(d.publicTransport<=4)tips.push(["🚌 Travel","Use walking, cycling, carpooling, or public transport more often."]);
+      if(d.recycling<=5)tips.push(["♻️ Recycling","Increase recycling habits by separating paper, plastic, metal, and wet waste."]);
+      if(d.reusable<=5)tips.push(["🌿 Reuse","Use cloth bags, steel bottles, lunch boxes, and reusable cutlery."]);
+      if(!d.clothBag)tips.push(["🛍️ Cloth Bag","Keep one foldable cloth bag in your backpack or vehicle."]);
+      if(!d.segregate)tips.push(["🗂️ Segregation","Use two bins at home: dry waste and wet waste."]);
+      if(!d.refill)tips.push(["🧴 Refills","Choose refill packs for soap, shampoo, detergent, and cleaners."]);
+      if(!d.compost)tips.push(["🍂 Compost","Try a small compost box for fruit peels and vegetable waste."]);
+      if(!d.repair)tips.push(["🛠️ Repair","Repair electronics, bags, shoes, and containers before replacing them."]);
+      if(!d.localFood)tips.push(["🥕 Local Food","Choose local and seasonal food to reduce transport emissions."]);
+      if(!d.donate)tips.push(["👕 Donation","Donate old usable clothes and items instead of throwing them away."]);
+      if(!d.eBill)tips.push(["📱 Digital Bills","Use digital receipts and bills to reduce paper waste."]);
+      if(d.singleUse)tips.push(["🚫 Single-use","Avoid disposable cups, plates, straws, and plastic cutlery."]);
+      if(level==="Low Waste"&&tips.length<4)tips.push(["🏆 Maintain","Great job. Keep your routine and help one friend reduce waste too."]);
+      document.getElementById("tips").innerHTML=tips.map(([cat,text])=>`<div class="col-md-6"><div class="tip"><b>${cat}</b><p class="mb-0 mt-2">${text}</p></div></div>`).join("");
+    }
+
+    function drivers(d){
+      const items=[["Plastic pollution",d.plastic,"#16a34a"],["Food delivery packaging",d.delivery,"#f59e0b"],["Shopping packaging",d.shopping,"#38bdf8"],["Food waste",d.foodWaste,"#fb7185"],["Electricity emissions",d.electricity,"#facc15"],["Packaged snack wrappers",d.packagedSnacks,"#a855f7"],["Recycling protection gap",10-d.recycling,"#0f766e"],["Reusable gap",10-d.reusable,"#84cc16"]];
+      document.getElementById("drivers").innerHTML=items.sort((a,b)=>b[1]-a[1]).slice(0,4).map(([name,value,color])=>`<div><span class="color-dot" style="background:${color}"></span><b>${name}</b><div class="progress mt-2"><div class="progress-bar" style="width:${value*10}%;background:${color}"></div></div></div>`).join("");
+    }
+
+    function charts(d,score,carbon,eco){
+      if(pie)pie.destroy();if(bar)bar.destroy();if(line)line.destroy();
+      const labels=["Plastic Waste","Food Packaging","Food Waste","Recyclable Waste","Reusable Savings"], values=[d.plastic*3.5+d.packagedSnacks*1.2,d.delivery*2.8,d.foodWaste*2.1,d.recycling*1.4,d.reusable*1.7+d.publicTransport*.8], colors=["#16a34a","#f59e0b","#fb7185","#0f766e","#38bdf8"];
+      pie=new Chart(document.getElementById("pie"),{type:"pie",data:{labels,datasets:[{data:values,backgroundColor:colors}]},options:{plugins:{tooltip:{callbacks:{label:c=>`${c.label}: ${c.raw.toFixed(1)} kg estimate`}}}}});
+      document.getElementById("legend").innerHTML=labels.map((l,i)=>`<div><span class="color-dot" style="background:${colors[i]}"></span>${l}: ${values[i].toFixed(1)} kg estimate</div>`).join("");
+      const week=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+      bar=new Chart(document.getElementById("bar"),{type:"bar",data:{labels:week,datasets:[{label:"Waste generation",data:[score-8,score-4,score,score+4,score+6,score+2,score-3],backgroundColor:"#16a34a"},{label:"Carbon trend",data:[carbon-3,carbon-1,carbon,carbon+1,carbon+2,carbon+.5,carbon-1],backgroundColor:"#0f766e"}]}});
+      line=new Chart(document.getElementById("line"),{type:"line",data:{labels:week,datasets:[{label:"Eco improvement",data:[eco-18,eco-12,eco-8,eco-5,eco-2,eco,eco+3],borderColor:"#16a34a",tension:.35},{label:"Waste reduction trend",data:[100-score-12,100-score-8,100-score-4,100-score,100-score+3,100-score+6,100-score+8],borderColor:"#38bdf8",tension:.35}]}});
+    }
+
+    function calculations(d,bonus,penalty,carbonRaw,carbon,scoreRaw,score,eco,p,conf,level){
+      const highBase=`High chance = waste score (${score}) + risky habits adjustment`;
+      document.getElementById("calculationBox").innerHTML=`
+        <div class="tip"><b>1. Eco Bonus Calculation 🌿</b><br>
+          Formula: cloth bag + segregation + refills + compost + repair + local food + donation + digital bills + public transport support.<br>
+          Result: ${bonus.toFixed(1)} points. This lowers carbon and waste score because these habits prevent waste before it is created.
+        </div>
+        <div class="tip"><b>2. Risk Penalty Calculation ⚠️</b><br>
+          Formula: single-use penalty + electricity x 1.1 + packaged snacks x 1.2.<br>
+          Result: ${penalty.toFixed(1)} points. This raises impact because disposable items, extra energy, and wrappers increase pollution.
+        </div>
+        <div class="tip"><b>3. Carbon Footprint Calculation ☁️</b><br>
+          Formula: (${d.plastic} x 2.5) + (${d.delivery} x 1.8) + (${d.shopping} x 1.5) + (${d.foodWaste} x 1.2) + (${d.electricity} x 1.1) + (${d.packagedSnacks} x 1.2) - (${d.recycling} x 2) - (${d.reusable} x 1.7) - (${d.publicTransport} x 0.8) - eco bonus effect + penalty effect.<br>
+          Raw value: ${carbonRaw.toFixed(2)}. Final carbon footprint: <b>${carbon} kg CO₂/month</b>.
+        </div>
+        <div class="tip"><b>4. Waste Score Calculation 🧺</b><br>
+          Formula: carbon x 3.1 + plastic x 2 + delivery x 1.4 + food waste x 1.8 + packaged snacks x 1.6 + penalty - bonus.<br>
+          Raw value: ${scoreRaw.toFixed(2)}. Final score after limiting to 0-100: <b>${score}/100</b>. This maps to <b>${level}</b>.
+        </div>
+        <div class="tip"><b>5. Probability Calculation 📊</b><br>
+          ${highBase}. Low chance increases when composting, segregation, recycling, and reusable habits are stronger.<br>
+          Final chances: Low Waste ${p[0]}%, Medium Waste ${p[1]}%, High Waste ${p[2]}%. AI confidence = highest probability = <b>${conf}%</b>.
+        </div>
+        <div class="tip"><b>6. Sustainability Score Calculation 💚</b><br>
+          Formula: 100 - waste score + recycling + reusable usage + half of eco bonus.<br>
+          Final sustainability score: <b>${eco}/100</b>.
+        </div>`;
+    }
+
+    function conclusion(level,score,carbon,eco,p,d){
+      const bestAction = d.plastic>=d.delivery && d.plastic>=d.foodWaste ? "Start by reducing plastic bottles and packets this week." :
+        d.delivery>=d.foodWaste ? "Start by reducing food delivery packaging this week." :
+        "Start by reducing food waste through meal planning and composting.";
+      const rating = level==="Low Waste" ? "😄 Excellent" : level==="Medium Waste" ? "🙂 Improving" : "😟 Needs Action";
+      const mood = level==="Low Waste" ? "Fresh forest energy 🌳" : level==="Medium Waste" ? "Growing green habits 🌱" : "Emergency eco mission 🚨";
+      document.getElementById("conclusionText").textContent=`${user.name}, your final EcoWise summary is ${level}. Your score is ${score}/100, carbon footprint is ${carbon} kg CO₂/month, and sustainability score is ${eco}/100. The AI sees a ${p[2]}% chance of High Waste behavior. Your strongest improvement area should be handled first because small weekly changes can reduce next month's waste trend.`;
+      document.getElementById("emojiRating").textContent=rating;
+      document.getElementById("emojiFeedback").textContent=level==="Low Waste"?"Great work. Your habits show strong reuse and waste awareness.":"You can improve quickly by changing the top 1-2 pollution drivers shown above.";
+      document.getElementById("nextAction").textContent=bestAction;
+      document.getElementById("ecoMood").textContent=mood;
+    }
+
+    function resetForm(){initInputs();document.getElementById("description").textContent="Submit your lifestyle data to get a personalized paragraph.";}
+    function confetti(){["🌱","♻️","✨","🌍","💚"].forEach((x,i)=>{const s=document.createElement("span");s.className="confetti";s.textContent=x;s.style.left=(20+i*15)+"%";s.style.top="72%";document.body.appendChild(s);setTimeout(()=>s.remove(),950);});}
+    function logoutUser(){
+      user={name:"Guest",age:"--",avatar:"🌿"};
+      document.getElementById("loginForm").reset();
+      document.getElementById("appScreen").classList.add("d-none");
+      document.getElementById("loginScreen").classList.remove("d-none");
+      document.getElementById("navUser").textContent="Guest";
+      document.getElementById("logoutBtn").classList.add("d-none");
+      window.location.hash="";
+    }
+  </script>
+</body>
+</html>
