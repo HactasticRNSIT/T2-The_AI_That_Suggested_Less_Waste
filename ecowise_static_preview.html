@@ -127,7 +127,7 @@
               <div class="col-md-3"><div class="eco-card p-3 metric"><span>Carbon</span><strong id="carbon">--</strong></div></div>
               <div class="col-md-3"><div class="eco-card p-3 metric"><span>Sustainability</span><strong id="eco">--</strong></div></div>
             </div>
-            <div class="eco-card p-4 mb-4 result-box">
+            <div class="eco-card p-4 mb-4 result-box" id="aiResultSection">
               <h3 class="h4 fw-black">AI Result Description 🧠</h3>
               <p class="lead mb-0" id="description">Submit your lifestyle data to get a personalized paragraph.</p>
             </div>
@@ -240,7 +240,12 @@
       confetti();
     });
 
-    document.getElementById("habitForm").addEventListener("submit",e=>{e.preventDefault();predict();confetti();});
+    document.getElementById("habitForm").addEventListener("submit",e=>{
+      e.preventDefault();
+      predict();
+      confetti();
+      document.getElementById("aiResultSection").scrollIntoView({behavior:"smooth",block:"start"});
+    });
     initInputs();
 
     function val(id){return Number(document.getElementById(id).value)}
