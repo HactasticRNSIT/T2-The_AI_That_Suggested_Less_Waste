@@ -9,8 +9,17 @@
   <style>
     :root{--leaf:#16a34a;--mint:#dcfce7;--sky:#38bdf8;--sun:#facc15;--rose:#fb7185;--ink:#071512}
     *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(135deg,#f7fff9,#e0f2fe 46%,#dcfce7);color:var(--ink);font-family:Inter,system-ui,Segoe UI,sans-serif}
+    body{margin:0;background:linear-gradient(135deg,#f7fff9,#e0f2fe 46%,#dcfce7);color:var(--ink);font-family:Inter,system-ui,Segoe UI,sans-serif;overflow-x:hidden}
     body.dark{background:linear-gradient(135deg,#071512,#10251f 55%,#082f49);color:#f7fff9}
+    .moving-bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+    .bg-orbit{position:absolute;width:260px;height:260px;border-radius:50%;filter:blur(12px);opacity:.32;animation:drift 18s ease-in-out infinite}
+    .bg-orbit.one{left:-80px;top:15%;background:radial-gradient(circle,#22c55e,transparent 68%)}
+    .bg-orbit.two{right:-70px;top:30%;background:radial-gradient(circle,#38bdf8,transparent 68%);animation-delay:4s}
+    .bg-orbit.three{left:35%;bottom:-120px;background:radial-gradient(circle,#facc15,transparent 70%);animation-delay:8s}
+    .bg-float{position:absolute;font-size:28px;opacity:.34;animation:floatBg 12s linear infinite}
+    .bg-float:nth-child(4){left:8%;top:85%;animation-delay:0s}.bg-float:nth-child(5){left:28%;top:92%;animation-delay:2s}.bg-float:nth-child(6){left:52%;top:88%;animation-delay:4s}.bg-float:nth-child(7){left:76%;top:94%;animation-delay:6s}.bg-float:nth-child(8){left:90%;top:86%;animation-delay:8s}
+    @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(55px,-35px) scale(1.15)}}
+    @keyframes floatBg{0%{transform:translateY(0) rotate(0deg);opacity:0}15%{opacity:.38}100%{transform:translateY(-115vh) rotate(180deg);opacity:0}}
     .eco-nav{background:rgba(255,255,255,.78);backdrop-filter:blur(18px);border-bottom:1px solid rgba(20,83,45,.12)}
     body.dark .eco-nav{background:rgba(7,21,18,.84);border-color:rgba(255,255,255,.12)}
     .brand{font-weight:950;letter-spacing:.2px}.brand-icon{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#14532d,#16a34a);color:#dcfce7;box-shadow:0 0 36px rgba(22,163,74,.32)}
@@ -35,6 +44,16 @@
   </style>
 </head>
 <body class="dark">
+  <div class="moving-bg" aria-hidden="true">
+    <span class="bg-orbit one"></span>
+    <span class="bg-orbit two"></span>
+    <span class="bg-orbit three"></span>
+    <span class="bg-float">🌿</span>
+    <span class="bg-float">💧</span>
+    <span class="bg-float">♻️</span>
+    <span class="bg-float">🍃</span>
+    <span class="bg-float">☀️</span>
+  </div>
   <nav class="navbar navbar-expand-lg eco-nav sticky-top">
     <div class="container">
       <span class="navbar-brand brand d-flex align-items-center gap-2"><span class="brand-icon">🌍</span> EcoWise AI</span>
@@ -123,7 +142,7 @@
             </div>
           </div>
           <div class="col-lg-8">
-            <div class="row g-3 mb-4">
+            <div class="row g-3 mb-4" id="resultCards">
               <div class="col-md-3"><div class="eco-card p-3 metric"><span>Waste</span><strong id="level">--</strong></div></div>
               <div class="col-md-3"><div class="eco-card p-3 metric"><span>Waste Score</span><strong id="score">--</strong></div></div>
               <div class="col-md-3"><div class="eco-card p-3 metric"><span>Carbon</span><strong id="carbon">--</strong></div></div>
@@ -254,7 +273,7 @@
       e.preventDefault();
       predict();
       confetti();
-      document.getElementById("aiResultSection").scrollIntoView({behavior:"smooth",block:"start"});
+      document.getElementById("resultCards").scrollIntoView({behavior:"smooth",block:"center"});
     });
     initInputs();
 
